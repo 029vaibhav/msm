@@ -4,6 +4,8 @@ import com.mobiweb.msm.models.Auth;
 import com.mobiweb.msm.repositories.AuthRepo;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,16 +14,21 @@ import java.util.List;
 @Service
 public class AuthServiceImpl implements AuthService {
 
+    private final Logger log = LoggerFactory.getLogger(AuthServiceImpl.class);
     @Autowired
     AuthRepo authRepo;
-
 
     @Override
     public Auth create(Auth auth) {
 
-        auth.setCreated(DateTime.now().withZone(DateTimeZone.UTC));
-        auth.setModified(DateTime.now().withZone(DateTimeZone.UTC));
-        return authRepo.save(auth);
+        try {
+            auth.setCreated(DateTime.now().withZone(DateTimeZone.UTC));
+            auth.setModified(DateTime.now().withZone(DateTimeZone.UTC));
+            return authRepo.save(auth);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            throw e;
+        }
     }
 
     @Override
@@ -37,6 +44,7 @@ public class AuthServiceImpl implements AuthService {
             return Auth;
 
         } catch (Exception e) {
+            log.error(e.getMessage());
             throw e;
         }
 
@@ -58,6 +66,7 @@ public class AuthServiceImpl implements AuthService {
             return Auth;
 
         } catch (Exception e) {
+            log.error(e.getMessage());
             throw e;
         }
     }

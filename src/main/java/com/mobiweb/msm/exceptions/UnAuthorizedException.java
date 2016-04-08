@@ -1,4 +1,4 @@
-package com.mobiweb.msm;
+package com.mobiweb.msm.exceptions;
 
 public class UnAuthorizedException extends RuntimeException {
 

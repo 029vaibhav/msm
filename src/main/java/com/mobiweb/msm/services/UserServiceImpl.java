@@ -1,8 +1,13 @@
 package com.mobiweb.msm.services;
 
+import com.mobiweb.msm.exceptions.DuplicateUser;
+import com.mobiweb.msm.exceptions.error.ErrorMessage;
+import com.mobiweb.msm.exceptions.error.UserDoesNotExists;
 import com.mobiweb.msm.models.User;
 import com.mobiweb.msm.models.enums.Role;
 import com.mobiweb.msm.repositories.UserRepo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,9 +20,9 @@ import java.util.Map;
 @Service
 public class UserServiceImpl implements UserService {
 
+    private final Logger log = LoggerFactory.getLogger(AuthServiceImpl.class);
     @Autowired
     UserRepo userRepo;
-
 
     @Override
     public void create(User user) {
@@ -26,7 +31,7 @@ public class UserServiceImpl implements UserService {
         if (userFromUsername == null) {
             userRepo.save(user);
         } else {
-            // username already exists
+            throw new DuplicateUser(ErrorMessage.DUPLICATE_USER);
         }
     }
 
@@ -53,15 +58,13 @@ public class UserServiceImpl implements UserService {
             }
             return userRepo.save(userFromUsername);
         } catch (Exception e) {
-            // user not updated
+            log.error(e.getMessage());
             throw new RuntimeException();
         }
     }
 
     @Override
     public User updateGcmID(String username, String gcmID) {
-
-
         try {
             User user = getUserFromUsername(username);
             if (user != null) {
@@ -70,9 +73,10 @@ public class UserServiceImpl implements UserService {
                 return user;
             } else {
                 //user doesn't exists
-                throw new RuntimeException();
+                throw new UserDoesNotExists(ErrorMessage.N0_USER);
             }
         } catch (Exception e) {
+            log.error(e.getMessage());
             throw e;
         }
 
@@ -86,6 +90,7 @@ public class UserServiceImpl implements UserService {
             User User = userRepo.getOne(id);
             return User;
         } catch (Exception e) {
+            log.error(e.getMessage());
             throw e;
         }
 
@@ -100,6 +105,7 @@ public class UserServiceImpl implements UserService {
             return User;
 
         } catch (Exception e) {
+            log.error(e.getMessage());
             throw e;
         }
     }
@@ -114,9 +120,7 @@ public class UserServiceImpl implements UserService {
                 userRepo.save(oneByUsername);
                 return oneByUsername;
             } else {
-
-                // username doesnt exist exception
-                return null;
+                throw new UserDoesNotExists(ErrorMessage.N0_USER);
             }
 
         } catch (Exception e) {
@@ -134,12 +138,9 @@ public class UserServiceImpl implements UserService {
             if (oneByUsername != null) {
                 return oneByUsername;
             } else {
-                // throw username doesnt exists exception
-
-                return null;
+                throw new UserDoesNotExists(ErrorMessage.N0_USER);
             }
         } catch (Exception e) {
-            // username doesn't exists
             throw e;
         }
     }

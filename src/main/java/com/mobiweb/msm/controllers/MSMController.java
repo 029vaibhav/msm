@@ -1,6 +1,6 @@
 package com.mobiweb.msm.controllers;
 
-import com.mobiweb.msm.UnAuthorizedException;
+import com.mobiweb.msm.exceptions.UnAuthorizedException;
 import com.mobiweb.msm.models.*;
 import com.mobiweb.msm.models.enums.ProductType;
 import com.mobiweb.msm.models.enums.Role;

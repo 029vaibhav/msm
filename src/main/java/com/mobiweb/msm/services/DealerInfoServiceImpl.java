@@ -5,6 +5,8 @@ import com.mobiweb.msm.repositories.DealerInfoRepo;
 import com.mobiweb.msm.utils.Constants;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,9 +15,9 @@ import java.util.List;
 @Service
 public class DealerInfoServiceImpl implements DealerInfoService {
 
+    private final Logger log = LoggerFactory.getLogger(AuthServiceImpl.class);
     @Autowired
     DealerInfoRepo dealerInfoRepo;
-
 
     @Override
     public DealerInfo create(DealerInfo dealerInfo) {
@@ -26,6 +28,7 @@ public class DealerInfoServiceImpl implements DealerInfoService {
                 dealerInfo.setCreated(DateTime.now().withZone(DateTimeZone.UTC));
                 return dealerInfoRepo.save(dealerInfo);
             } else {
+                log.error("dealer doesnt exists " + dealerInfo.getDealerName());
                 throw new RuntimeException();
             }
         } catch (Exception e) {
@@ -39,7 +42,7 @@ public class DealerInfoServiceImpl implements DealerInfoService {
         try {
             dealerInfoRepo.save(dealerInfo);
         } catch (Exception e) {
-
+            log.error(e.getMessage());
         }
 
 
@@ -53,6 +56,7 @@ public class DealerInfoServiceImpl implements DealerInfoService {
             return DealerInfo;
 
         } catch (Exception e) {
+            log.error(e.getMessage());
             throw e;
         }
 
@@ -67,6 +71,7 @@ public class DealerInfoServiceImpl implements DealerInfoService {
             return DealerInfo;
 
         } catch (Exception e) {
+            log.error(e.getMessage());
             throw e;
         }
     }

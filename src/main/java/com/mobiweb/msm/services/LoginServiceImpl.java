@@ -1,5 +1,8 @@
 package com.mobiweb.msm.services;
 
+import com.mobiweb.msm.exceptions.InvalidCredentials;
+import com.mobiweb.msm.exceptions.error.ErrorMessage;
+import com.mobiweb.msm.exceptions.error.UserDoesNotExists;
 import com.mobiweb.msm.models.*;
 import com.mobiweb.msm.repositories.LocationRepo;
 import com.mobiweb.msm.repositories.ProductRepo;
@@ -44,7 +47,7 @@ public class LoginServiceImpl implements LoginService {
     public String getAuthToken(String username, String password) {
 
         User oneByUsername = userRepo.findOneByUsername(username);
-        if (oneByUsername != null) {
+        if (oneByUsername != null && oneByUsername.getDeleted() == 0) {
             if (oneByUsername.getPassword().equals(password)) {
 
                 Auth auth = new Auth();
@@ -54,10 +57,10 @@ public class LoginServiceImpl implements LoginService {
                 Constants.tokenList.add(auth1.getAuth());
                 return auth1.getAuth();
             } else {
-                throw new RuntimeException();
+                throw new InvalidCredentials(ErrorMessage.INVALID_CRED);
             }
         } else {
-            throw new RuntimeException();
+            throw new UserDoesNotExists(ErrorMessage.N0_USER);
         }
 
     }
