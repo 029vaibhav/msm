@@ -1,5 +1,7 @@
 package com.mobiweb.msm.services;
 
+import com.mobiweb.msm.exceptions.SameIMEI;
+import com.mobiweb.msm.exceptions.error.ErrorMessage;
 import com.mobiweb.msm.models.Sales;
 import com.mobiweb.msm.models.User;
 import com.mobiweb.msm.models.enums.ProductType;
@@ -33,6 +35,8 @@ public class SalesServiceImpl implements SalesService {
                 sales.setCreated(DateTime.now());
                 Sales sales1 = salesRepo.save(sales);
                 sendNotification(sales1);
+            } else {
+                throw new SameIMEI(ErrorMessage.SAME_IMEI);
             }
         } catch (Exception e) {
             throw new RuntimeException();

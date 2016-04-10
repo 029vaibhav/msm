@@ -6,7 +6,7 @@ import com.mobiweb.msm.models.enums.Status;
 import javax.persistence.*;
 
 @Entity
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+@JsonIgnoreProperties()
 public class Technical extends MetaData {
 
     @Id

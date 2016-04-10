@@ -6,7 +6,6 @@ import com.mobiweb.msm.exceptions.error.UserDoesNotExists;
 import com.mobiweb.msm.models.*;
 import com.mobiweb.msm.repositories.LocationRepo;
 import com.mobiweb.msm.repositories.ProductRepo;
-import com.mobiweb.msm.repositories.UserRepo;
 import com.mobiweb.msm.utils.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,7 +18,7 @@ import java.util.UUID;
 public class LoginServiceImpl implements LoginService {
 
     @Autowired
-    UserRepo userRepo;
+    UserService userService;
     @Autowired
     ProductRepo productRepo;
     @Autowired
@@ -33,7 +32,7 @@ public class LoginServiceImpl implements LoginService {
     public LoginDetails getLoginDetails(String username) {
 
         LoginDetails loginDetails = new LoginDetails();
-        User oneByUsername = userRepo.findOneByUsername(username);
+        User oneByUsername = userService.getUserFromUsername(username);
         List<Product> products = productRepo.findAll();
         Location oneByRole = locationRepo.findOneByRole(oneByUsername.getRole());
         loginDetails.setUser(oneByUsername);
@@ -44,9 +43,9 @@ public class LoginServiceImpl implements LoginService {
 
 
     @Override
-    public String getAuthToken(String username, String password) {
+    public Auth getAuthToken(String username, String password) {
 
-        User oneByUsername = userRepo.findOneByUsername(username);
+        User oneByUsername = userService.getUserFromUsername(username);
         if (oneByUsername != null && oneByUsername.getDeleted() == 0) {
             if (oneByUsername.getPassword().equals(password)) {
 
@@ -55,7 +54,7 @@ public class LoginServiceImpl implements LoginService {
                 auth.setAuth(UUID.randomUUID().toString());
                 Auth auth1 = authService.create(auth);
                 Constants.tokenList.add(auth1.getAuth());
-                return auth1.getAuth();
+                return auth1;
             } else {
                 throw new InvalidCredentials(ErrorMessage.INVALID_CRED);
             }
@@ -68,7 +67,7 @@ public class LoginServiceImpl implements LoginService {
     @Override
     public void logOut(String username) {
 
-        User oneByUsername = userRepo.findOneByUsername(username);
+        User oneByUsername = userService.getUserFromUsername(username);
         if (oneByUsername != null) {
             List<Auth> auth = authService.retrieveByUsername(username);
             if (auth != null && auth.size() > 0) {

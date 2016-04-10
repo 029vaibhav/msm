@@ -6,6 +6,8 @@ import com.mobiweb.msm.exceptions.error.UserDoesNotExists;
 import com.mobiweb.msm.models.User;
 import com.mobiweb.msm.models.enums.Role;
 import com.mobiweb.msm.repositories.UserRepo;
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,8 +29,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public void create(User user) {
 
-        User userFromUsername = getUserFromUsername(user.getUsername());
-        if (userFromUsername == null) {
+        User oneByUsername = userRepo.findOneByUsername(user.getUsername());
+        if (oneByUsername == null) {
+            user.setCreated(DateTime.now().withZone(DateTimeZone.UTC));
+            user.setModified(DateTime.now().withZone(DateTimeZone.UTC));
             userRepo.save(user);
         } else {
             throw new DuplicateUser(ErrorMessage.DUPLICATE_USER);
@@ -56,6 +60,7 @@ public class UserServiceImpl implements UserService {
                 Field field = User.class.getField((String) data2.getKey());
                 field.set(userFromUsername, data2.getValue());
             }
+            userFromUsername.setModified(DateTime.now().withZone(DateTimeZone.UTC));
             return userRepo.save(userFromUsername);
         } catch (Exception e) {
             log.error(e.getMessage());
@@ -69,6 +74,7 @@ public class UserServiceImpl implements UserService {
             User user = getUserFromUsername(username);
             if (user != null) {
                 user.setRegId(gcmID);
+                user.setModified(DateTime.now().withZone(DateTimeZone.UTC));
                 userRepo.save(user);
                 return user;
             } else {

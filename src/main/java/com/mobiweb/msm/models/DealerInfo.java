@@ -10,7 +10,7 @@ import javax.persistence.Id;
 
 
 @Entity
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+@JsonIgnoreProperties()
 @EnableAutoConfiguration
 public class DealerInfo extends MetaData{
 

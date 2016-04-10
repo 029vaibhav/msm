@@ -6,7 +6,7 @@ import com.mobiweb.msm.models.enums.Role;
 import javax.persistence.*;
 
 @Entity
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+@JsonIgnoreProperties()
 
 public class User extends MetaData {
 

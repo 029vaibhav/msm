@@ -6,7 +6,7 @@ import com.mobiweb.msm.models.enums.ProductType;
 import javax.persistence.*;
 
 @Entity
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+@JsonIgnoreProperties()
 public class Product extends MetaData {
 
     String brand, model, sim, screenSize, displayType, os, iMemory, eMemory, fCamera, bCamera, wlan, bluetooth, nfc, infrared, radio, battery;

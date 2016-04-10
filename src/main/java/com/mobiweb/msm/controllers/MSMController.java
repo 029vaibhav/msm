@@ -1,5 +1,8 @@
 package com.mobiweb.msm.controllers;
 
+import com.mobiweb.msm.exceptions.DuplicateUser;
+import com.mobiweb.msm.exceptions.InvalidCredentials;
+import com.mobiweb.msm.exceptions.SameIMEI;
 import com.mobiweb.msm.exceptions.UnAuthorizedException;
 import com.mobiweb.msm.models.*;
 import com.mobiweb.msm.models.enums.ProductType;
@@ -50,6 +53,24 @@ public class MSMController {
     @ExceptionHandler
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     public String handleMethodArgumentNotValidException(UnAuthorizedException e) {
+        return e.getMessage();
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public String handleMethodArgumentNotValidException(DuplicateUser e) {
+        return e.getMessage();
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public String handleMethodArgumentNotValidException(InvalidCredentials e) {
+        return e.getMessage();
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public String handleMethodArgumentNotValidException(SameIMEI e) {
         return e.getMessage();
     }
 
@@ -115,7 +136,7 @@ public class MSMController {
     }
 
     @RequestMapping(value = "/login", method = RequestMethod.GET)
-    public String authToken(@RequestParam("username") String username, @RequestParam("password") String password) {
+    public Auth authToken(@RequestParam("username") String username, @RequestParam("password") String password) {
         return loginService.getAuthToken(username, password);
     }
 

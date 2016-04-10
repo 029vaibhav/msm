@@ -10,7 +10,7 @@ import org.joda.time.DateTime;
 import javax.persistence.*;
 
 @Entity
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+@JsonIgnoreProperties()
 
 public class Message extends MetaData {
 

@@ -8,8 +8,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 @Entity
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-
+@JsonIgnoreProperties()
 public class Payment extends MetaData {
 
 

@@ -6,7 +6,7 @@ import com.mobiweb.msm.models.enums.ProductType;
 import javax.persistence.*;
 
 @Entity
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+@JsonIgnoreProperties()
 public class Sales extends MetaData {
 
     String username, accessoryType, brand, model, customerName, imei,mobile;
