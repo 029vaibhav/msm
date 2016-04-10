@@ -2,11 +2,15 @@ package com.mobiweb.msm.services;
 
 import com.mobiweb.msm.exceptions.SameIMEI;
 import com.mobiweb.msm.exceptions.error.ErrorMessage;
+import com.mobiweb.msm.models.DirtyProduct;
 import com.mobiweb.msm.models.Sales;
+import com.mobiweb.msm.models.Technical;
 import com.mobiweb.msm.models.User;
 import com.mobiweb.msm.models.enums.ProductType;
 import com.mobiweb.msm.models.enums.Role;
+import com.mobiweb.msm.models.enums.Status;
 import com.mobiweb.msm.repositories.SalesRepo;
+import com.mobiweb.msm.repositories.TechnicalRepo;
 import com.mobiweb.msm.utils.Constants;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +29,8 @@ public class SalesServiceImpl implements SalesService {
     SalesRepo salesRepo;
     @Autowired
     UserService userService;
+    @Autowired
+    TechnicalRepo technicalService;
 
 
     @Override
@@ -33,6 +39,7 @@ public class SalesServiceImpl implements SalesService {
             List<Sales> allByImeiAndMobile = salesRepo.findAllByImeiAndMobile(sales.getImei(), sales.getMobile());
             if (allByImeiAndMobile == null || allByImeiAndMobile.size() == 0) {
                 sales.setCreated(DateTime.now());
+                sales.setModified(DateTime.now());
                 Sales sales1 = salesRepo.save(sales);
                 sendNotification(sales1);
             } else {
@@ -134,6 +141,31 @@ public class SalesServiceImpl implements SalesService {
         List<Sales> allByCreatedBetween = salesRepo.findAllByCreatedBetween(startDate, endDate);
         List<Sales> result = salesRepo.findAllByBrandAndModelAndProductTypeAndCreatedBetween(brand, model, ProductType.Mobile, startDate, endDate);
         return result;
+    }
+
+    @Override
+    public void convertOldSalesToNewSales(List<DirtyProduct> dirtyProducts) {
+
+        System.out.println("dirty " + dirtyProducts.size());
+        dirtyProducts.stream().forEach(dirtyProduct -> {
+
+            Technical sales = new Technical();
+            String[] split = dirtyProduct.getBrandModel().split("-");
+            sales.setBrand(split[0]);
+            sales.setModel(split[1]);
+            sales.setCreated(Constants.getShortDate(dirtyProduct.getCreated()));
+            sales.setModified(Constants.getDate(dirtyProduct.getModifiedDate()));
+            sales.setUsername(dirtyProduct.getUserName());
+            sales.setJobNo(dirtyProduct.getJobNo());
+            sales.setPrice(Integer.parseInt(dirtyProduct.getPrice()));
+            sales.setProblem(dirtyProduct.getProblem());
+            sales.setPlace(dirtyProduct.getPlace());
+            sales.setStatus(Status.valueOf(dirtyProduct.getStatus()));
+            sales.setResolution(dirtyProduct.getResolution());
+            technicalService.save(sales);
+
+        });
+
     }
 
 

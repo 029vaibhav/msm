@@ -1,5 +1,6 @@
 package com.mobiweb.msm.services;
 
+import com.mobiweb.msm.models.DirtyProduct;
 import com.mobiweb.msm.models.Sales;
 import com.mobiweb.msm.models.enums.ProductType;
 import org.joda.time.DateTime;
@@ -22,6 +23,8 @@ public interface SalesService {
 
     List<Sales> salesByUser(String startDate, String endDate, String username);
 
-    List<Sales> salesOfMobileByBrandModelDate(String brand, String model,DateTime startDate, DateTime endDate);
+    List<Sales> salesOfMobileByBrandModelDate(String brand, String model, DateTime startDate, DateTime endDate);
+
+    void convertOldSalesToNewSales(List<DirtyProduct> dirtyProducts);
 
 }

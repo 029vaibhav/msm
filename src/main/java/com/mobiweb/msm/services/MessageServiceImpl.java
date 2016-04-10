@@ -5,6 +5,8 @@ import com.mobiweb.msm.models.User;
 import com.mobiweb.msm.models.enums.Role;
 import com.mobiweb.msm.repositories.MessageRepo;
 import com.mobiweb.msm.utils.Constants;
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,9 +23,11 @@ public class MessageServiceImpl implements MessageService {
 
 
     @Override
-    public void create(Message Message) {
+    public void create(Message message) {
 
-        Message save = messageRepo.save(Message);
+        message.setCreated(DateTime.now().withZone(DateTimeZone.UTC));
+        message.setModified(DateTime.now().withZone(DateTimeZone.UTC));
+        Message save = messageRepo.save(message);
         sendNotification(save.getMessage(), save);
     }
 

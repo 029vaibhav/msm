@@ -3,6 +3,7 @@ package com.mobiweb.msm.services;
 import com.mobiweb.msm.models.Product;
 import com.mobiweb.msm.repositories.ProductRepo;
 import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,16 +20,18 @@ public class ProductServiceImpl implements ProductService {
     public void create(Product product) {
 
         Product oneByBrandAndModelAndType = productRepo.findOneByBrandAndModelAndType(product.getBrand(), product.getModel(), product.getType());
-        if (oneByBrandAndModelAndType == null)
-        { product.setCreated(DateTime.now());
-            productRepo.save(product);}
-        else {
+        if (oneByBrandAndModelAndType == null) {
+            product.setCreated(DateTime.now().withZone(DateTimeZone.UTC));
+            product.setModified(DateTime.now().withZone(DateTimeZone.UTC));
+            productRepo.save(product);
+        } else {
             // throw product already exists error
         }
     }
 
     @Override
     public void update(Product product) {
+        product.setModified(DateTime.now().withZone(DateTimeZone.UTC));
         productRepo.save(product);
     }
 

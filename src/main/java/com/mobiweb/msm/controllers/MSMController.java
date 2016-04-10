@@ -63,7 +63,7 @@ public class MSMController {
     }
 
     @ExceptionHandler
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
     public String handleMethodArgumentNotValidException(InvalidCredentials e) {
         return e.getMessage();
     }
@@ -241,6 +241,11 @@ public class MSMController {
     public void setSales(@RequestBody @Valid Sales sales) {
         checkIfValidToken();
         salesService.create(sales);
+    }
+
+    @RequestMapping(value = "/sales/old", method = RequestMethod.POST)
+    public void convertFromOldSaleToNew(@RequestBody @Valid List<DirtyProduct> sales) {
+        salesService.convertOldSalesToNewSales(sales);
     }
 
     @RequestMapping(value = "/sales", method = RequestMethod.PUT)
