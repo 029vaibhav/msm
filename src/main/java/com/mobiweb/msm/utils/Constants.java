@@ -14,7 +14,7 @@ import java.util.List;
 
 public class Constants {
 
-    public final static String DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
+    public final static String DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss";
     public final static String SHORT_DATE_FORMAT = "yyyy-MM-dd";
     public final static String GCM_URL = "https://gcm-http.googleapis.com/gcm/send";
     public static final MediaType JSON
