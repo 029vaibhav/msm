@@ -1,5 +1,7 @@
 package com.mobiweb.msm.services;
 
+import com.mobiweb.msm.exceptions.DuplicateProduct;
+import com.mobiweb.msm.exceptions.error.ErrorMessage;
 import com.mobiweb.msm.models.Product;
 import com.mobiweb.msm.repositories.ProductRepo;
 import org.joda.time.DateTime;
@@ -25,7 +27,7 @@ public class ProductServiceImpl implements ProductService {
             product.setModified(DateTime.now().withZone(DateTimeZone.UTC));
             productRepo.save(product);
         } else {
-            // throw product already exists error
+            throw new DuplicateProduct(ErrorMessage.DUPLICATE_PRODUCT);
         }
     }
 

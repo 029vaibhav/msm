@@ -1,9 +1,6 @@
 package com.mobiweb.msm.controllers;
 
-import com.mobiweb.msm.exceptions.DuplicateUser;
-import com.mobiweb.msm.exceptions.InvalidCredentials;
-import com.mobiweb.msm.exceptions.SameIMEI;
-import com.mobiweb.msm.exceptions.UnAuthorizedException;
+import com.mobiweb.msm.exceptions.*;
 import com.mobiweb.msm.models.*;
 import com.mobiweb.msm.models.enums.ProductType;
 import com.mobiweb.msm.models.enums.Role;
@@ -69,8 +66,32 @@ public class MSMController {
     }
 
     @ExceptionHandler
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public String handleMethodArgumentNotValidException(UserDoesNotExists e) {
+        return e.getMessage();
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public String handleMethodArgumentNotValidException(DuplicateDealerName e) {
+        return e.getMessage();
+    }
+
+    @ExceptionHandler
     @ResponseStatus(HttpStatus.CONFLICT)
     public String handleMethodArgumentNotValidException(SameIMEI e) {
+        return e.getMessage();
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public String handleMethodArgumentNotValidException(DuplicateIncentive e) {
+        return e.getMessage();
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public String handleMethodArgumentNotValidException(DuplicateProduct e) {
         return e.getMessage();
     }
 

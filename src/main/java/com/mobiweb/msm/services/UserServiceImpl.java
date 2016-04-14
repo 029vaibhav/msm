@@ -1,8 +1,8 @@
 package com.mobiweb.msm.services;
 
 import com.mobiweb.msm.exceptions.DuplicateUser;
+import com.mobiweb.msm.exceptions.UserDoesNotExists;
 import com.mobiweb.msm.exceptions.error.ErrorMessage;
-import com.mobiweb.msm.exceptions.error.UserDoesNotExists;
 import com.mobiweb.msm.models.User;
 import com.mobiweb.msm.models.enums.Role;
 import com.mobiweb.msm.repositories.UserRepo;

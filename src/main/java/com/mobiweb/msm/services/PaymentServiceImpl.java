@@ -27,7 +27,7 @@ public class PaymentServiceImpl implements PaymentService {
             payment.setCreated(DateTime.now());
             payment.setModified(DateTime.now());
             Payment save = paymentRepo.save(payment);
-            int sum = getPurchaseAmount();
+            int sum = getPurchaseAmount(payment.getDealerId());
             updateDealerInfo(sum, payment.getDealerId());
             return save;
         } catch (Exception e) {
@@ -41,7 +41,7 @@ public class PaymentServiceImpl implements PaymentService {
         try {
             payment.setModified(DateTime.now());
             paymentRepo.save(payment);
-            int sum = getPurchaseAmount();
+            int sum = getPurchaseAmount(payment.getDealerId());
             updateDealerInfo(sum, payment.getDealerId());
         } catch (Exception e) {
         }
@@ -68,8 +68,8 @@ public class PaymentServiceImpl implements PaymentService {
         dealerInfoService.update(retrieve);
     }
 
-    public int getPurchaseAmount() {
-        List<Payment> all = paymentRepo.findAll();
+    public int getPurchaseAmount(Long id) {
+        List<Payment> all = paymentRepo.findAllByDealerId(id);
         int sum = all.stream().mapToInt(Payment::getAmount).sum();
         return sum;
     }
@@ -81,7 +81,7 @@ public class PaymentServiceImpl implements PaymentService {
         try {
             Payment payment = paymentRepo.getOne(id);
             paymentRepo.delete(id);
-            int sum = getPurchaseAmount();
+            int sum = getPurchaseAmount(payment.getDealerId());
             updateDealerInfo(sum, payment.getDealerId());
             return payment;
         } catch (Exception e) {

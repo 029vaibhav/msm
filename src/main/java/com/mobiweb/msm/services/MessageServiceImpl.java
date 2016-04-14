@@ -25,10 +25,15 @@ public class MessageServiceImpl implements MessageService {
     @Override
     public void create(Message message) {
 
-        message.setCreated(DateTime.now().withZone(DateTimeZone.UTC));
-        message.setModified(DateTime.now().withZone(DateTimeZone.UTC));
-        Message save = messageRepo.save(message);
-        sendNotification(save.getMessage(), save);
+        try {
+            message.setCreated(DateTime.now().withZone(DateTimeZone.UTC));
+            message.setModified(DateTime.now().withZone(DateTimeZone.UTC));
+            Message save = messageRepo.save(message);
+            sendNotification(save.getMessage(), save);
+
+        } catch (Exception e) {
+            throw e;
+        }
     }
 
 

@@ -2,11 +2,13 @@ package com.mobiweb.msm.services;
 
 import com.mobiweb.msm.exceptions.InvalidCredentials;
 import com.mobiweb.msm.exceptions.error.ErrorMessage;
-import com.mobiweb.msm.exceptions.error.UserDoesNotExists;
+import com.mobiweb.msm.exceptions.UserDoesNotExists;
 import com.mobiweb.msm.models.*;
 import com.mobiweb.msm.repositories.LocationRepo;
 import com.mobiweb.msm.repositories.ProductRepo;
 import com.mobiweb.msm.utils.Constants;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +19,7 @@ import java.util.UUID;
 @Service
 public class LoginServiceImpl implements LoginService {
 
+    private final Logger log = LoggerFactory.getLogger(LoginServiceImpl.class);
     @Autowired
     UserService userService;
     @Autowired
@@ -31,14 +34,19 @@ public class LoginServiceImpl implements LoginService {
     @Override
     public LoginDetails getLoginDetails(String username) {
 
-        LoginDetails loginDetails = new LoginDetails();
-        User oneByUsername = userService.getUserFromUsername(username);
-        List<Product> products = productRepo.findAll();
-        Location oneByRole = locationRepo.findOneByRole(oneByUsername.getRole());
-        loginDetails.setUser(oneByUsername);
-        loginDetails.setProducts(products);
-        loginDetails.setLocation(oneByRole);
-        return loginDetails;
+        try {
+            LoginDetails loginDetails = new LoginDetails();
+            User oneByUsername = userService.getUserFromUsername(username);
+            List<Product> products = productRepo.findAll();
+            Location oneByRole = locationRepo.findOneByRole(oneByUsername.getRole());
+            loginDetails.setUser(oneByUsername);
+            loginDetails.setProducts(products);
+            loginDetails.setLocation(oneByRole);
+            return loginDetails;
+        } catch (Exception e) {
+            log.error("unknown error" + e.getMessage());
+            throw e;
+        }
     }
 
 
@@ -56,9 +64,11 @@ public class LoginServiceImpl implements LoginService {
                 Constants.tokenList.add(auth1.getAuth());
                 return auth1;
             } else {
+                log.error("invalid cred username" + username + " pass" + password);
                 throw new InvalidCredentials(ErrorMessage.INVALID_CRED);
             }
         } else {
+            log.error("invalid account username" + username + " pass" + password);
             throw new UserDoesNotExists(ErrorMessage.N0_USER);
         }
 

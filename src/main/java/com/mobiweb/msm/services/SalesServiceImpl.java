@@ -1,7 +1,5 @@
 package com.mobiweb.msm.services;
 
-import com.mobiweb.msm.exceptions.SameIMEI;
-import com.mobiweb.msm.exceptions.error.ErrorMessage;
 import com.mobiweb.msm.models.DirtyProduct;
 import com.mobiweb.msm.models.Sales;
 import com.mobiweb.msm.models.Technical;
@@ -13,6 +11,8 @@ import com.mobiweb.msm.repositories.SalesRepo;
 import com.mobiweb.msm.repositories.TechnicalRepo;
 import com.mobiweb.msm.utils.Constants;
 import org.joda.time.DateTime;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,6 +25,7 @@ import java.util.stream.Collectors;
 @Service
 public class SalesServiceImpl implements SalesService {
 
+    private final Logger log = LoggerFactory.getLogger(SalesServiceImpl.class);
     @Autowired
     SalesRepo salesRepo;
     @Autowired
@@ -32,21 +33,28 @@ public class SalesServiceImpl implements SalesService {
     @Autowired
     TechnicalRepo technicalService;
 
-
     @Override
     public void create(Sales sales) {
         try {
-            List<Sales> allByImeiAndMobile = salesRepo.findAllByImeiAndMobile(sales.getImei(), sales.getMobile());
-            if (allByImeiAndMobile == null || allByImeiAndMobile.size() == 0) {
-                sales.setCreated(DateTime.now());
-                sales.setModified(DateTime.now());
-                Sales sales1 = salesRepo.save(sales);
-                sendNotification(sales1);
-            } else {
-                throw new SameIMEI(ErrorMessage.SAME_IMEI);
-            }
+//            if (sales.getProductType() == ProductType.Mobile) {
+//                List<Sales> allByImeiAndMobile = salesRepo.findAllByImeiAndMobile(sales.getImei(), sales.getMobile());
+//                if (allByImeiAndMobile == null || allByImeiAndMobile.size() == 0) {
+//                    sales.setCreated(DateTime.now());
+//                    sales.setModified(DateTime.now());
+//                    Sales sales1 = salesRepo.save(sales);
+//                    sendNotification(sales1);
+//                } else {
+//                    throw new SameIMEI(ErrorMessage.SAME_IMEI);
+//                }
+//            } else {
+            sales.setCreated(DateTime.now());
+            sales.setModified(DateTime.now());
+            Sales sales1 = salesRepo.save(sales);
+            sendNotification(sales1);
+//            }
         } catch (Exception e) {
-            throw new RuntimeException();
+            log.error("sales error " + e.getMessage());
+            throw e;
         }
     }
 

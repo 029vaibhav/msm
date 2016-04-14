@@ -1,4 +1,4 @@
-package com.mobiweb.msm.exceptions.error;
+package com.mobiweb.msm.exceptions;
 
 public class UserDoesNotExists extends RuntimeException {
 

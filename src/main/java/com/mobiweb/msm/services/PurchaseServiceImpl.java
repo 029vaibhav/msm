@@ -35,7 +35,7 @@ public class PurchaseServiceImpl implements PurchaseService {
         purchase.setCreated(DateTime.now().withZone(DateTimeZone.UTC));
         purchase.setModified(DateTime.now().withZone(DateTimeZone.UTC));
         Purchase save = purchaseRepo.save(purchase);
-        int sum = getPurchaseAmount();
+        int sum = getPurchaseAmount(purchase.getDealerId());
         updateDealerInfo(sum, purchase.getDealerId());
         return save;
 
@@ -73,7 +73,7 @@ public class PurchaseServiceImpl implements PurchaseService {
         try {
             Purchase purchase = purchaseRepo.getOne(id);
             purchaseRepo.delete(id);
-            int sum = getPurchaseAmount();
+            int sum = getPurchaseAmount(purchase.getDealerId());
             updateDealerInfo(sum, purchase.getDealerId());
             return purchase;
 
@@ -111,8 +111,8 @@ public class PurchaseServiceImpl implements PurchaseService {
     }
 
 
-    public int getPurchaseAmount() {
-        List<Purchase> all = purchaseRepo.findAll();
+    public int getPurchaseAmount(Long dealerId) {
+        List<Purchase> all = purchaseRepo.findAllByDealerId(dealerId);
         int sum = all.stream().mapToInt(Purchase::getAmount).sum();
         return sum;
     }

@@ -1,5 +1,7 @@
 package com.mobiweb.msm.services;
 
+import com.mobiweb.msm.exceptions.DuplicateIncentive;
+import com.mobiweb.msm.exceptions.error.ErrorMessage;
 import com.mobiweb.msm.models.IncentiveMessage;
 import com.mobiweb.msm.models.Message;
 import com.mobiweb.msm.models.Sales;
@@ -38,7 +40,7 @@ public class IncentiveMessageServiceImpl implements IncentiveMessageService {
             message.setEndDate(incentiveMessage.getValidity());
             messageService.create(message);
         } else {
-            // through error already present
+            throw new DuplicateIncentive(ErrorMessage.DUPLICATE_INCENTIVE);
         }
     }
 

@@ -1,5 +1,7 @@
 package com.mobiweb.msm.services;
 
+import com.mobiweb.msm.exceptions.DuplicateDealerName;
+import com.mobiweb.msm.exceptions.error.ErrorMessage;
 import com.mobiweb.msm.models.DealerInfo;
 import com.mobiweb.msm.repositories.DealerInfoRepo;
 import com.mobiweb.msm.utils.Constants;
@@ -28,8 +30,8 @@ public class DealerInfoServiceImpl implements DealerInfoService {
                 dealerInfo.setCreated(DateTime.now().withZone(DateTimeZone.UTC));
                 return dealerInfoRepo.save(dealerInfo);
             } else {
-                log.error("dealer doesnt exists " + dealerInfo.getDealerName());
-                throw new RuntimeException();
+                log.error("duplicate dealer name" + dealerInfo.getDealerName());
+                throw new DuplicateDealerName(ErrorMessage.DUPLICATE_DEALER);
             }
         } catch (Exception e) {
             throw e;

@@ -15,4 +15,5 @@ public interface PaymentRepo extends JpaRepository<Payment, Long> {
 
     List<Payment> findAllByCreatedAfterAndDealerId(DateTime from, Long dealearId);
 
+    List<Payment> findAllByDealerId(Long id);
 }
