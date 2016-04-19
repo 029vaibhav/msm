@@ -1,5 +1,6 @@
 package com.mobiweb.msm.services;
 
+import com.mobiweb.msm.exceptions.ImageCantBeProcessed;
 import com.mobiweb.msm.models.DealerInfo;
 import com.mobiweb.msm.models.ExpenseManager;
 import com.mobiweb.msm.models.Payment;
@@ -30,14 +31,19 @@ public class PurchaseServiceImpl implements PurchaseService {
     @Override
     public Purchase create(Purchase purchase) {
 
-        String s = imageService.insertFile(purchase.getImage());
-        purchase.setImage(s);
-        purchase.setCreated(DateTime.now().withZone(DateTimeZone.UTC));
-        purchase.setModified(DateTime.now().withZone(DateTimeZone.UTC));
-        Purchase save = purchaseRepo.save(purchase);
-        int sum = getPurchaseAmount(purchase.getDealerId());
-        updateDealerInfo(sum, purchase.getDealerId());
-        return save;
+        try {
+            String s = imageService.insertFile(purchase.getImage());
+            purchase.setImage(s);
+            purchase.setCreated(DateTime.now().withZone(DateTimeZone.UTC));
+            purchase.setModified(DateTime.now().withZone(DateTimeZone.UTC));
+            Purchase save = purchaseRepo.save(purchase);
+            int sum = getPurchaseAmount(purchase.getDealerId());
+            updateDealerInfo(sum, purchase.getDealerId());
+            return save;
+        } catch (ImageCantBeProcessed ImageCantBeProcessed) {
+            throw ImageCantBeProcessed;
+        }
+
 
     }
 

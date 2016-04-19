@@ -6,9 +6,11 @@ import com.mobiweb.msm.models.GCM;
 import com.mobiweb.msm.models.GCMmessage;
 import okhttp3.*;
 import okhttp3.logging.HttpLoggingInterceptor;
+import org.apache.commons.codec.binary.Base64;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.List;
 
@@ -19,6 +21,7 @@ public class Constants {
     public final static String GCM_URL = "https://gcm-http.googleapis.com/gcm/send";
     public static final MediaType JSON
             = MediaType.parse("application/json; charset=utf-8");
+    public static final String BUCKET_NAME = "msm-images";
 
     public static List<String> tokenList;
 
@@ -60,6 +63,19 @@ public class Constants {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+
+    }
+
+    public static java.io.File convertString(String file) throws IOException {
+
+        byte[] bytes = Base64.decodeBase64(file);
+        java.io.File convFile = new java.io.File("image.jpg");
+        convFile.createNewFile();
+        FileOutputStream fos = new FileOutputStream(convFile);
+        fos.write(bytes);
+        fos.close();
+        return convFile;
 
 
     }

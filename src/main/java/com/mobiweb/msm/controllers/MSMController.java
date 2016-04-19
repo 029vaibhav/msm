@@ -90,6 +90,13 @@ public class MSMController {
     }
 
     @ExceptionHandler
+    @ResponseStatus(HttpStatus.SERVICE_UNAVAILABLE)
+    public String handleMethodArgumentNotValidException(ImageCantBeProcessed e) {
+        return e.getMessage();
+    }
+
+
+    @ExceptionHandler
     @ResponseStatus(HttpStatus.CONFLICT)
     public String handleMethodArgumentNotValidException(DuplicateProduct e) {
         return e.getMessage();
