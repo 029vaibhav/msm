@@ -29,8 +29,8 @@ public class ImageServiceImpl implements ImageService {
     public String insertFile(String multipartFile) {
 
         AWSCredentials credentials = new BasicAWSCredentials(
-                "AKIAJBRATKZKTAILGXZQ",
-                "8ErVpXl1mWi5rPYOVz51WUfjadzSNhsABqrS+a4q");
+                "accessKey",
+                "secretKey");
         AmazonS3 s3client = new AmazonS3Client(credentials);
 
         String fileName = UUID.randomUUID().toString() + ".jpg";
