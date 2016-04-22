@@ -6,7 +6,10 @@ import java.util.List;
 
 public interface ProductService {
 
-    void create(Product Product);
+    Product create(Product Product);
+
+    Product createAccessory(Product Product);
+
 
     void update(Product Product);
 
@@ -15,7 +18,6 @@ public interface ProductService {
     Product delete(long id);
 
     List<Product> getAllProducts();
-
 
 
 }

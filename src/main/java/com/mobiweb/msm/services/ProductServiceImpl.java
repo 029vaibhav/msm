@@ -19,13 +19,28 @@ public class ProductServiceImpl implements ProductService {
 
 
     @Override
-    public void create(Product product) {
+    public Product create(Product product) {
 
         Product oneByBrandAndModelAndType = productRepo.findOneByBrandAndModelAndType(product.getBrand(), product.getModel(), product.getType());
         if (oneByBrandAndModelAndType == null) {
             product.setCreated(DateTime.now().withZone(DateTimeZone.UTC));
             product.setModified(DateTime.now().withZone(DateTimeZone.UTC));
-            productRepo.save(product);
+            Product save = productRepo.save(product);
+            return save;
+        } else {
+            throw new DuplicateProduct(ErrorMessage.DUPLICATE_PRODUCT);
+        }
+    }
+
+    @Override
+    public Product createAccessory(Product product) {
+
+        Product product1 = productRepo.findOneByBrandAndModelAndAccessoryType(product.getBrand(), product.getModel(), product.getAccessoryType());
+        if (product1 == null) {
+            product.setCreated(DateTime.now().withZone(DateTimeZone.UTC));
+            product.setModified(DateTime.now().withZone(DateTimeZone.UTC));
+            Product save = productRepo.save(product);
+            return save;
         } else {
             throw new DuplicateProduct(ErrorMessage.DUPLICATE_PRODUCT);
         }

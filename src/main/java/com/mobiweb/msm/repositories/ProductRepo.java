@@ -9,4 +9,7 @@ import org.springframework.stereotype.Repository;
 public interface ProductRepo extends JpaRepository<Product, Long> {
 
     Product findOneByBrandAndModelAndType(String brand, String mobile, ProductType productType);
+
+    Product findOneByBrandAndModelAndAccessoryType(String brand, String mobile, String accessoryType);
+
 }

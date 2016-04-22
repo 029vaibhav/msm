@@ -99,7 +99,7 @@ public class MSMController {
     @ExceptionHandler
     @ResponseStatus(HttpStatus.CONFLICT)
     public String handleMethodArgumentNotValidException(DuplicateProduct e) {
-        return e.getMessage();
+        return "Such product already exists in the system";
     }
 
     public void checkIfValidToken() {
@@ -258,9 +258,16 @@ public class MSMController {
     }
 
     @RequestMapping(value = "/product", method = RequestMethod.POST)
-    public void setProduct(@RequestBody @Valid Product product) {
+    public Product setProduct(@RequestBody @Valid Product product) {
         checkIfValidToken();
-        productService.create(product);
+        Product product1 = productService.create(product);
+        return product1;
+    }
+
+    @RequestMapping(value = "/product/accessory", method = RequestMethod.POST)
+    public Product setAccessory(@RequestBody @Valid Product product) {
+        checkIfValidToken();
+        return productService.createAccessory(product);
     }
 
     // Sales

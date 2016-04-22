@@ -12,6 +12,7 @@ import com.amazonaws.services.s3.model.PutObjectResult;
 import com.mobiweb.msm.exceptions.ImageCantBeProcessed;
 import com.mobiweb.msm.models.Images;
 import com.mobiweb.msm.repositories.ImagesRepo;
+import com.mobiweb.msm.utils.AWSAccess;
 import com.mobiweb.msm.utils.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -29,8 +30,8 @@ public class ImageServiceImpl implements ImageService {
     public String insertFile(String multipartFile) {
 
         AWSCredentials credentials = new BasicAWSCredentials(
-                "accessKey",
-                "secretKey");
+                AWSAccess.accessKey,
+                AWSAccess.secretKey);
         AmazonS3 s3client = new AmazonS3Client(credentials);
 
         String fileName = UUID.randomUUID().toString() + ".jpg";
